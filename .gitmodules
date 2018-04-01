@@ -1,0 +1,6 @@
+[submodule "fiware-improvements/lightweightm2m-iotagent"]
+	path = fiware-improvements/lightweightm2m-iotagent
+	url = https://github.com/m4n3dw0lf/lightweightm2m-iotagent
+[submodule "fiware-improvements/lwm2m-node-lib"]
+	path = fiware-improvements/lwm2m-node-lib
+	url = https://github.com/m4n3dw0lf/lwm2m-node-lib

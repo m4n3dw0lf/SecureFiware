@@ -1,0 +1,53 @@
+# OpenSSL Container
+# Container that only generate SSL/TLS Certificate and Key then exits.
+openssl:
+  # https://hub.docker.com/r/frapsoft/openssl/
+  image: frapsoft/openssl
+  # Your local directory are mounted with the container /export directory
+  volumes:
+    - ./:/export
+  # Command that the container will execute to generate the .crt and .key
+  command: req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /export/cert.key -out /export/cert.crt -subj '/CN=fiware-orion/O=fiware/C=BR'
+  container_name: secfiware_openssl
+
+
+# MongoDB Container
+mongo:
+  # https://hub.docker.com/r/library/mongo/
+  image: mongo
+  # Run with --nojournal to prevent log saturation
+  command: --nojournal
+  container_name: secfiware_mongodb
+
+
+# Nginx Reverse TLS proxy for Orion and LWM2M IoTA
+nginx-proxy:
+  # https://hub.docker.com/r/library/nginx
+  image: nginx
+  # This container only will start after lwm2m-iota and orion
+  links:
+    - orion
+  # Nginx will expose the port in TLS for the world then do the forwarding internally into iota
+  ports:
+    - "1026:1026"
+  # Nginx configuration and certificate/key mounted on the container
+  volumes:
+    - ./cert.crt:/etc/nginx/cert.crt
+    - ./cert.key:/etc/nginx/cert.key
+    - ./utils/nginx/nginx.server:/etc/nginx/sites-enabled/default
+    - ./utils/nginx/nginx.server:/etc/nginx/sites-available/default
+    - ./utils/nginx/nginx.conf:/etc/nginx/nginx.conf
+  container_name: secfiware_nginx
+
+
+# Orion Context-Broker Container
+# C++ WebService that perform operations on the MongoDB via REST
+orion:
+  # https://hub.docker.com/r/fiware/orion/
+  image: fiware/orion
+  # This container only will start after mongo
+  links:
+    - mongo
+  # Running without the -https parameter cuz the IoTa lacks on HTTPS support
+  command: -dbhost mongo
+  container_name: secfiware_orion
