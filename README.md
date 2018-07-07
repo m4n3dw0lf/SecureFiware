@@ -121,7 +121,7 @@ $ sudo docker-compose down
 <br>
 <details>
 <summary>Start the IoT Device</summary>
-<br><br>
+<br>
 <h5> Running the LWM2M IoT Device (Client) </h5>
 <br>
 Enter the <b>fiware-improvements/lwm2m-node-lib</b> directory and install the nodejs requirements:
