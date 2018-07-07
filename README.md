@@ -14,7 +14,7 @@
 ![](img/iota-device-encryption-proposal.png)
 
 For the encrypted communication between the device and the IoT agent we've embedded a DTLS server feature in the **lwm2m-node-lib** source code that forwards any request to the plain-text lwm2m udp server via localhost network then forward the response back to the client. We designed this solution to be setup easily in the configuration `.js` file and is totally compatible with the **lightweightm2m-iotagent** as described [here](fiware-improvements/README.md#dtls-configuration) and also demonstrated on the PoC below. Notice that the other lightweightm2m-iotagent features are totally unnafected by this modifications.
-The dtls-proxy library was also developed by us and already have more than 300 download in the npm (search for **node-dtls-proxy**)
+The dtls-proxy library was also developed by us and already have more than 300 downloads in the npm (search for **node-dtls-proxy**)
 
 ![](img/iota-device-encryption-solution.png)
 
@@ -45,6 +45,13 @@ For the HTTPS support on the Orion ContextBroker we've added a nginx container i
 <details>
 <summary>Requirements</summary>
 <br>
+
+Clone the repositoy:<br><br>
+<code>
+git clone https://github.com/m4n3dw0lf/securefiware --recursive
+</code>
+<br>
+<br>
 Install <b>Docker</b>: https://docs.docker.com/engine/installation/ and <b>docker-compose</b>: https://docs.docker.com/compose/install/.
 <br>
 <br>
@@ -63,9 +70,17 @@ sudo npm install -g node-dtls-proxy
 </details>
 <br>
 <details>
-<summary>Start the Orion Context Broker</summary>
+<summary>Start the Orion Context Broker and the LWM2M IoT Agent</summary>
 <br>
-run the <b>command below</b> to start the orion, mongodb, nginx and openssl docker containers
+Generate a certificate and key to be used in TLS and DTLS connections of the components
+<br>
+<br>
+<code>
+$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt
+</code>
+<br>
+<br>
+Run the <b>command below</b> inside this directory to start the orion, mongodb, iota and openssl docker containers
 <br>
 <br>
 <code>
@@ -90,6 +105,12 @@ $ sudo docker exec -it secfiware_orion bash
 </code>
 <br>
 <br>
+Acessing the IoT Agent bash:
+<code>
+$ sudo docker exec -it secfiware_iota bash
+</code>
+<br>
+<br>
 Destroying the environment:
 <code>
 $ sudo docker-compose down
@@ -99,34 +120,8 @@ $ sudo docker-compose down
 </details>
 <br>
 <details>
-<summary>Start the IoT Agent and IoT Device</summary>
-<h5> Initialize the git submodules </h5>
-<br>
-<code>
-$ git submodule update --init --recursive
-</code>
-<br>
-<br>
-<h5> Running the LWM2M IoT Agent (Server) </h5>
-<br>
-Enter the <b>fiware-improvements/lightweightm2m-iotagent</b> directory and install the nodejs requirements, also replace the <b>iotagent-node-lib</b> for the improved one:
-<br>
-<code>
-$ cd fiware-improvements/lightweightm2m-iotagent/ ; npm install
-</code>
+<summary>Start the IoT Device</summary>
 <br><br>
-You may need to generate a keypair and declare the path on the config-secure.json
-<code>
-$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt
-</code>
-<br><br>
-Run the LWM2M IoT Agent:<br>
-<code>
-$ node bin/lwm2mAgent.js config-secure.js
-</code>
-<br>
-<br>
-
 <h5> Running the LWM2M IoT Device (Client) </h5>
 <br>
 Enter the <b>fiware-improvements/lwm2m-node-lib</b> directory and install the nodejs requirements:

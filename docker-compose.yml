@@ -1,16 +1,3 @@
-# OpenSSL Container
-# Container that only generate SSL/TLS Certificate and Key then exits.
-openssl:
-  # https://hub.docker.com/r/frapsoft/openssl/
-  image: frapsoft/openssl
-  # Your local directory are mounted with the container /export directory
-  volumes:
-    - ./:/export
-  # Command that the container will execute to generate the .crt and .key
-  command: req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /export/cert.key -out /export/cert.crt -subj '/CN=fiware-orion/O=fiware/C=BR'
-  container_name: secfiware_openssl
-
-
 # MongoDB Container
 mongo:
   # https://hub.docker.com/r/library/mongo/
@@ -36,3 +23,12 @@ orion:
   # Passing the -https parameter to enable Orion in HTTPS context.
   command: -dbhost mongo -https -key /etc/orion-ssl/cert.key -cert /etc/orion-ssl/cert.crt
   container_name: secfiware_orion
+
+# LWM2M IoT Agent
+iota:
+  # https://hub.docker.com/r/m4n3dw0lf/dtls-lightweightm2m-iotagent
+  image: m4n3dw0lf/dtls-lightweightm2m-iotagent
+  net: host
+  volumes:
+    - ./cert.crt:/opt/iota-lwm2m/cert.crt
+    - ./cert.key:/opt/iota-lwm2m/cert.key
