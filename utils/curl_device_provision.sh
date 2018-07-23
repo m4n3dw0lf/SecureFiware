@@ -1,6 +1,6 @@
 curl -X POST -k https://localhost:4041/iot/devices \
-  --header "fiware-service:raspberry" \
-  --header "fiware-servicepath:/raspberry" \
+  --header "fiware-service:light_control" \
+  --header "fiware-servicepath:/light_control" \
   --header "Content-Type:application/json" -d '{
     "devices": [
       {
@@ -8,16 +8,16 @@ curl -X POST -k https://localhost:4041/iot/devices \
         "entity_type": "Raspberry",
         "attributes": [
           {
-            "name": "Light",
-            "type": "string"
+            "name": "On/Off",
+            "type": "Boolean"
           }
         ],
         "internal_attributes": {
           "lwm2mResourceMapping": {
-            "Light" : {
+            "On/Off" : {
               "objectType": 3311,
               "objectInstance": 0,
-              "objectResource": 0
+              "objectResource": 5850 
             }
           }
         }

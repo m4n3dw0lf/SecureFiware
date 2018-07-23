@@ -143,19 +143,19 @@ node bin/iotagent-lwm2m-client.js
 - Provisioning a service configuration for devices
 ```
 curl -X POST -k https://localhost:4041/iot/services \
-  --header "fiware-service:raspberry" \
-  --header "fiware-servicepath:/raspberry" \
-  --header "Content-Type:application/json" -d  '{
+  --header "fiware-service:light_control" \
+  --header "fiware-servicepath:/light_control" \
+  --header "Content-Type:application/json" -d  '{  
     "services": [
       {
-        "resource": "/raspberry",
+        "resource": "/light_control",
         "apikey": "",
-        "type": "Raspberry",
+        "type": "Light Control",
         "commands": [],
         "attributes": [
           {
-            "name": "Light",
-            "type": "string"
+            "name": "On/Off",
+            "type": "Boolean"
           }
         ]
       }
@@ -167,8 +167,8 @@ curl -X POST -k https://localhost:4041/iot/services \
 
 ```
 curl -X POST -k https://localhost:4041/iot/devices \
-  --header "fiware-service:raspberry" \
-  --header "fiware-servicepath:/raspberry" \
+  --header "fiware-service:light_control" \
+  --header "fiware-servicepath:/light_control" \
   --header "Content-Type:application/json" -d '{
     "devices": [
       {
@@ -176,16 +176,16 @@ curl -X POST -k https://localhost:4041/iot/devices \
         "entity_type": "Raspberry",
         "attributes": [
           {
-            "name": "Light",
-            "type": "string"
+            "name": "On/Off",
+            "type": "Boolean"
           }
         ],
         "internal_attributes": {
           "lwm2mResourceMapping": {
-            "Light" : {
+            "On/Off" : {
               "objectType": 3311,
               "objectInstance": 0,
-              "objectResource": 0
+              "objectResource": 5850 
             }
           }
         }
@@ -207,7 +207,7 @@ $ udp2dtls 5687 localhost 5684
 ```
 LWM2M-Client> create /3311/0
 LWM2M-Client> connect localhost 5687 rasp1 /raspberry
-LWM2M-Client> set /3311/0 0 On
+LWM2M-Client> set /3311/0 5850 On
 ```
 
 <h5>Query the device in the ContextBroker</h5>
@@ -216,8 +216,8 @@ LWM2M-Client> set /3311/0 0 On
 
 ```
 curl -X POST -k https://localhost:1026/v1/queryContext \
-  --header "fiware-service:raspberry" \
-  --header "fiware-servicepath:/raspberry" \
+  --header "fiware-service:light_control" \
+  --header "fiware-servicepath:/light_control" \
   --header "Content-Type:application/json" \
   --header "Accept:application/json" -d \
   '{"entities": [{"id": "Raspberry:rasp1"}]}'
