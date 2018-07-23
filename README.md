@@ -206,7 +206,7 @@ $ udp2dtls 5687 localhost 5684
 - Then (on another separated terminal) start an lwm2m-client
 ```
 LWM2M-Client> create /3311/0
-LWM2M-Client> connect localhost 5687 rasp1 /raspberry
+LWM2M-Client> connect localhost 5687 rasp1 /light_control
 LWM2M-Client> set /3311/0 5850 On
 ```
 
