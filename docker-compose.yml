@@ -1,7 +1,7 @@
 # MongoDB Container
 mongo:
   # https://hub.docker.com/r/library/mongo/
-  image: mongo
+  image: mongo:3.4
   # Run with --nojournal to prevent log saturation
   command: --nojournal
   container_name: secfiware_mongodb
@@ -11,7 +11,7 @@ mongo:
 # C++ WebService that perform operations on the MongoDB via REST
 orion:
   # https://hub.docker.com/r/fiware/orion/
-  image: fiware/orion
+  image: fiware/orion:1.10.0
   # This container only will start after mongo
   ports:
     - 1026:1026
